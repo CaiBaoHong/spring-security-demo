@@ -1,0 +1,62 @@
+plugins {
+    // 引入依赖管理插件（https://github.com/spring-gradle-plugins/dependency-management-plugin）
+    id "io.spring.dependency-management" version "1.0.4.RELEASE"
+}
+
+//所有工程：spring-security、app、browser、core、demo
+allprojects{
+    group 'com.abc'
+    version '1.0-SNAPSHOT'
+}
+
+//所有子工程：spring-security、app、browser、core、demo
+subprojects{
+
+    apply plugin: 'java'
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+    compileJava.options.encoding = "UTF-8"
+    compileTestJava.options.encoding = "UTF-8"
+
+    apply plugin: 'io.spring.dependency-management'
+
+    //所有子工程的仓库配置
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public'}
+        maven{ url "https://plugins.gradle.org/m2/" }
+        mavenCentral()
+    }
+
+    //使用依赖管理插件提供的DSL引入依赖配置，引入后声明依赖无需写版本号
+    dependencyManagement {
+        imports {
+            //spring io platform的依赖配置
+            mavenBom 'io.spring.platform:platform-bom:Brussels-SR6'
+            //spring cloud的依赖配置
+            mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Edgware.RELEASE'
+        }
+    }
+
+    //声明所有子项目都用到的依赖
+    dependencies {
+        // 安全
+        compile 'org.springframework.cloud:spring-cloud-starter-oauth2'
+
+        // 数据库
+        compile 'org.springframework.boot:spring-boot-starter-data-redis'
+        compile 'org.springframework.boot:spring-boot-starter-jdbc'
+        compile 'mysql:mysql-connector-java'
+
+        // spring social 社会化登录
+        compile 'org.springframework.social:spring-social-core'
+        compile 'org.springframework.social:spring-social-config'
+        compile 'org.springframework.social:spring-social-security'
+        compile 'org.springframework.social:spring-social-web'
+
+        //工具
+        compile 'commons-lang:commons-lang'
+        compile 'commons-collections:commons-collections'
+        compile 'commons-beanutils:commons-beanutils'
+    }
+
+}

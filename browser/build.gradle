@@ -1,0 +1,8 @@
+plugins {
+    // 引入spring-boot插件，用于打包
+    id "org.springframework.boot" version "1.5.9.RELEASE"
+}
+dependencies {
+    compile project(':core')
+    compile 'org.springframework.session:spring-session'
+}
