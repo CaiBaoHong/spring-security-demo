@@ -5,4 +5,9 @@ plugins {
 dependencies {
     compile project(':browser')
     compile 'org.springframework.boot:spring-boot-starter-aop'
+    compile 'io.springfox:springfox-swagger2:2.7.0'
+    compile 'io.springfox:springfox-swagger-ui:2.7.0'
+    testCompile "com.github.tomakehurst:wiremock:2.12.0"
+
+
 }

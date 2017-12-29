@@ -40,6 +40,7 @@ subprojects{
     //声明所有子项目都用到的依赖
     dependencies {
 
+
         compile 'org.springframework.boot:spring-boot-starter-test'
         compile 'org.springframework.boot:spring-boot-devtools'
 
@@ -59,6 +60,7 @@ subprojects{
         compile 'org.springframework.social:spring-social-web'
 
         //工具
+        compile 'commons-io:commons-io'
         compile 'commons-lang:commons-lang'
         compile 'commons-collections:commons-collections'
         compile 'commons-beanutils:commons-beanutils'

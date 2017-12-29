@@ -4,6 +4,8 @@ import com.abc.exception.UserNotExistException;
 import com.abc.model.User;
 import com.abc.model.UserQueryCondition;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +24,7 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
+    @ApiOperation(value = "查询用户")
     @GetMapping
     @JsonView(User.UserSimpleView.class)
     public List<User> query(UserQueryCondition condition,
@@ -36,15 +39,18 @@ public class UserController {
                 new User("王五"));
     }
 
+    @ApiOperation(value = "查询用户详情")
     @JsonView(User.UserDetailView.class)
     @GetMapping("/{id:\\d+}")
-    public User getInfo(@PathVariable String id){
+    public User getInfo(@ApiParam(value = "用户id")
+                            @PathVariable String id){
 //        throw new RuntimeException("用户不存在");
 //        throw new UserNotExistException("1");
         return new User("tom");
     }
 
 
+    @ApiOperation(value = "创建用户")
     @PostMapping
     public User create(@RequestBody @Valid User user){
 //        if (bind.hasErrors()){
@@ -57,6 +63,7 @@ public class UserController {
         return user;
     }
 
+    @ApiOperation(value = "更新用户")
     @PutMapping("/{id:\\d+}")
     public User update(@RequestBody @Valid User user, BindingResult bind){
         if (bind.hasErrors()){
@@ -72,6 +79,7 @@ public class UserController {
         return user;
     }
 
+    @ApiOperation(value = "删除用户")
     @DeleteMapping("/{id:\\d+}")
     public void delete(@PathVariable String id){
         System.out.println("Delete User, id: "+id);

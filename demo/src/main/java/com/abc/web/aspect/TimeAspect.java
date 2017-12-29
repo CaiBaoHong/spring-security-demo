@@ -11,8 +11,8 @@ import java.util.Date;
  * 切片（类）
  * 切片包含：切入点 + 增强
  */
-@Aspect
-@Component
+//@Aspect
+//@Component
 public class TimeAspect {
 
     /**
