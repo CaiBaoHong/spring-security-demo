@@ -39,8 +39,13 @@ subprojects{
 
     //声明所有子项目都用到的依赖
     dependencies {
+
+        compile 'org.springframework.boot:spring-boot-starter-test'
+        compile 'org.springframework.boot:spring-boot-devtools'
+
         // 安全
         compile 'org.springframework.cloud:spring-cloud-starter-oauth2'
+
 
         // 数据库
         compile 'org.springframework.boot:spring-boot-starter-data-redis'
