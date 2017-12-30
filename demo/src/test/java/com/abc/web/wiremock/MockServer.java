@@ -13,7 +13,7 @@ public class MockServer {
 
     @Test
     public void mockServer() throws IOException {
-        configureFor(9999);
+        configureFor(9999) ;
         removeAllMappings();
         mockGet("/order/1","order.json");
         mockGet("/user/1","user.json");
