@@ -3,6 +3,6 @@ plugins {
     id "org.springframework.boot" version "1.5.9.RELEASE"
 }
 dependencies {
-
+    compile 'com.github.bingoohuang:patchca:0.0.1'
 
 }

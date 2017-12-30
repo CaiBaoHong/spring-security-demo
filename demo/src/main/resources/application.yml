@@ -11,3 +11,8 @@ spring:
 security:
   basic:
     enabled: true
+
+custom:
+  security:
+    browser:
+      login-type: JSON
