@@ -10,18 +10,16 @@ import com.github.bingoohuang.patchca.filter.predefined.CurvesRippleFilterFactor
 import com.github.bingoohuang.patchca.font.RandomFontFactory;
 import com.github.bingoohuang.patchca.service.Captcha;
 import com.github.bingoohuang.patchca.word.RandomWordFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 
 /**
  * 模拟一个用户自定义的图片验证码生成器，用于测试是否支持图片验证码生成逻辑可配置
  */
-@Component("imageCodeGenerator")
+//@Component("imageCodeGenerator")
 public class CustomImageCodeGenerator implements ValidateCodeGenerator {
 
-    @Autowired
+    //@Autowired
     private SecurityProperties securityProperties;
 
     @Override
@@ -29,7 +27,7 @@ public class CustomImageCodeGenerator implements ValidateCodeGenerator {
         Integer width = 300;
         Integer height = 80;
         Integer length = ServletRequestUtils.getIntParameter(request.getRequest(), "charNum",
-                securityProperties.getCode().getImage().getCharNum());
+                securityProperties.getCode().getImage().getLength());
         Integer fontSize = ServletRequestUtils.getIntParameter(request.getRequest(), "fontSize",
                 securityProperties.getCode().getImage().getFontSize());
         Integer expireIn = ServletRequestUtils.getIntParameter(request.getRequest(), "expireIn",

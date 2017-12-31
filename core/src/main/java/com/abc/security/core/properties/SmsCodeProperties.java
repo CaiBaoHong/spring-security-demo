@@ -5,24 +5,16 @@ package com.abc.security.core.properties;
  */
 public class SmsCodeProperties {
 
-    private int charNum = 6;//验证码字符数
+    private int length = 6;//验证码字符数
     private int expireIn = 180;//验证码过期期限(秒)
     private String filterUrls;//需要做图形验证码校验的url
 
-    public String getFilterUrls() {
-        return filterUrls;
+    public int getLength() {
+        return length;
     }
 
-    public void setFilterUrls(String filterUrls) {
-        this.filterUrls = filterUrls;
-    }
-
-    public int getCharNum() {
-        return charNum;
-    }
-
-    public void setCharNum(int charNum) {
-        this.charNum = charNum;
+    public void setLength(int length) {
+        this.length = length;
     }
 
     public int getExpireIn() {
@@ -31,5 +23,13 @@ public class SmsCodeProperties {
 
     public void setExpireIn(int expireIn) {
         this.expireIn = expireIn;
+    }
+
+    public String getFilterUrls() {
+        return filterUrls;
+    }
+
+    public void setFilterUrls(String filterUrls) {
+        this.filterUrls = filterUrls;
     }
 }

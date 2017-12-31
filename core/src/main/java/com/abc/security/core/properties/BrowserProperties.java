@@ -11,7 +11,7 @@ public class BrowserProperties {
 
     private String loginPage = "/standard-login.html";
     private LoginType loginType = LoginType.JSON;
-    private int rememberMeSeconds = 3600 * 24 * 7;
+    private int rememberMeSeconds = 3600;//1小时
 
 
     public int getRememberMeSeconds() {

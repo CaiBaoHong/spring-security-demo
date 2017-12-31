@@ -33,8 +33,8 @@ public class ImageCodeGenerator implements ValidateCodeGenerator {
                 securityProperties.getCode().getImage().getWidth());
         Integer height = ServletRequestUtils.getIntParameter(request.getRequest(), "height",
                 securityProperties.getCode().getImage().getHeight());
-        Integer length = ServletRequestUtils.getIntParameter(request.getRequest(), "charNum",
-                securityProperties.getCode().getImage().getCharNum());
+        Integer length = ServletRequestUtils.getIntParameter(request.getRequest(), "length",
+                securityProperties.getCode().getImage().getLength());
         Integer fontSize = ServletRequestUtils.getIntParameter(request.getRequest(), "fontSize",
                 securityProperties.getCode().getImage().getFontSize());
         Integer expireIn = ServletRequestUtils.getIntParameter(request.getRequest(), "expireIn",

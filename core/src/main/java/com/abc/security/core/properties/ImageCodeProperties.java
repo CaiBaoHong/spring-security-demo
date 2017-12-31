@@ -1,6 +1,6 @@
 package com.abc.security.core.properties;
 
-public class ImageCodeProperties extends SmsCodeProperties{
+public class ImageCodeProperties{
 
     private int width = 100;    //图片宽度
     private int height = 30;    //图片高度
@@ -34,12 +34,10 @@ public class ImageCodeProperties extends SmsCodeProperties{
         this.length = length;
     }
 
-    @Override
     public int getExpireIn() {
         return expireIn;
     }
 
-    @Override
     public void setExpireIn(int expireIn) {
         this.expireIn = expireIn;
     }
@@ -60,12 +58,10 @@ public class ImageCodeProperties extends SmsCodeProperties{
         this.hard = hard;
     }
 
-    @Override
     public String getFilterUrls() {
         return filterUrls;
     }
 
-    @Override
     public void setFilterUrls(String filterUrls) {
         this.filterUrls = filterUrls;
     }
