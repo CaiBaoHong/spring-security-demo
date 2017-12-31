@@ -1,6 +1,7 @@
 package com.abc.security.core.validate.code;
 
 import com.abc.security.core.properties.SecurityProperties;
+import com.abc.security.core.validate.code.image.ImageCode;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,6 @@ import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -82,7 +82,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
      */
     private void validate(ServletWebRequest request) throws ServletRequestBindingException {
 
-        String sessionKey = ValidateCodeController.SESSION_KEY;
+        String sessionKey = ValidateCodeProcessor.SESSION_KEY_PREFIX+"IMAGE";
 
         ImageCode codeInSession = (ImageCode) sessionStrategy.getAttribute(request,sessionKey);
 

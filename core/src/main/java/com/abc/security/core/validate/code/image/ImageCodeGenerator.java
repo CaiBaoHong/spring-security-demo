@@ -1,6 +1,7 @@
-package com.abc.security.core.validate.code;
+package com.abc.security.core.validate.code.image;
 
 import com.abc.security.core.properties.SecurityProperties;
+import com.abc.security.core.validate.code.ValidateCodeGenerator;
 import com.github.bingoohuang.patchca.color.ColorFactory;
 import com.github.bingoohuang.patchca.custom.ConfigurableCaptchaService;
 import com.github.bingoohuang.patchca.filter.FilterFactory;

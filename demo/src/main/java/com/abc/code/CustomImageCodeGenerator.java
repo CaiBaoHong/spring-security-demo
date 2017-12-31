@@ -1,7 +1,7 @@
 package com.abc.code;
 
 import com.abc.security.core.properties.SecurityProperties;
-import com.abc.security.core.validate.code.ImageCode;
+import com.abc.security.core.validate.code.image.ImageCode;
 import com.abc.security.core.validate.code.ValidateCodeGenerator;
 import com.github.bingoohuang.patchca.color.ColorFactory;
 import com.github.bingoohuang.patchca.color.SingleColorFactory;

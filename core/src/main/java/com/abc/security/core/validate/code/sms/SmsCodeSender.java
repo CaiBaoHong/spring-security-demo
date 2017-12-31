@@ -1,4 +1,4 @@
-package com.abc.security.core.validate.code;
+package com.abc.security.core.validate.code.sms;
 
 /**
  * 短信验证码发送接口
