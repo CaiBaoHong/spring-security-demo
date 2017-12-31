@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ValidateCodeFilter extends OncePerRequestFilter implements InitializingBean {
+public class SmsCodeFilter extends OncePerRequestFilter implements InitializingBean {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -42,11 +42,11 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
     @Override
     public void afterPropertiesSet() throws ServletException {
         super.afterPropertiesSet();
-        String filterUrls = securityProperties.getCode().getImage().getFilterUrls();
+        String filterUrls = securityProperties.getCode().getSms().getFilterUrls();
         if (StringUtils.isNotBlank(filterUrls)){
             urls.addAll(Arrays.asList(StringUtils.splitByWholeSeparatorPreserveAllTokens(filterUrls,",")));
         }
-        urls.add("/authentication/form");
+        urls.add("/authentication/mobile");
         logger.info("验证码过滤的url: "+urls);
     }
 
@@ -84,11 +84,11 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
      */
     private void validate(ServletWebRequest request) throws ServletRequestBindingException {
 
-        String sessionKey = ValidateCodeProcessor.SESSION_KEY_PREFIX+"IMAGE";
+        String sessionKey = ValidateCodeProcessor.SESSION_KEY_PREFIX+"SMS";
 
-        ImageCode codeInSession = (ImageCode) sessionStrategy.getAttribute(request,sessionKey);
+        ValidateCode codeInSession = (ValidateCode) sessionStrategy.getAttribute(request,sessionKey);
 
-        String codeInRequest = ServletRequestUtils.getStringParameter(request.getRequest(), "imageCode");
+        String codeInRequest = ServletRequestUtils.getStringParameter(request.getRequest(), "smsCode");
 
         if (StringUtils.isBlank(codeInRequest)) {
             throw new ValidateCodeException("验证码不能为空");
@@ -134,4 +134,5 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
     public void setSecurityProperties(SecurityProperties securityProperties) {
         this.securityProperties = securityProperties;
     }
+
 }

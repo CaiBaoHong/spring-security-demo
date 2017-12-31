@@ -2,7 +2,9 @@ package com.abc.security.browser;
 
 import com.abc.security.browser.authentication.BrowserAuthenticationFailureHandler;
 import com.abc.security.browser.authentication.BrowserAuthenticationSuccessHandler;
+import com.abc.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
 import com.abc.security.core.properties.SecurityProperties;
+import com.abc.security.core.validate.code.SmsCodeFilter;
 import com.abc.security.core.validate.code.ValidateCodeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +32,9 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
     @Autowired
+    private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+
+    @Autowired
     private DataSource dataSource;
 
 //    @Autowired
@@ -56,7 +61,13 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
         validateCodeFilter.setSecurityProperties(securityProperties);
         validateCodeFilter.afterPropertiesSet();
 
-        http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+        SmsCodeFilter smsCodeFilter = new SmsCodeFilter();
+        smsCodeFilter.setAuthenticationFailureHandler(browserAuthenticationFailureHandler);
+        smsCodeFilter.setSecurityProperties(securityProperties);
+        smsCodeFilter.afterPropertiesSet();
+
+        http    .addFilterBefore(smsCodeFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin()
                 //在/authentication/require映射的控制器中做登录跳转处理，区分ajax请求引发的登录和请求页面引发的登录
                 .loginPage("/authentication/require")
@@ -80,6 +91,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated()//都需要鉴权（身份认证）
                 .and()
                 .csrf().disable()
+                .apply(smsCodeAuthenticationSecurityConfig)
         ;
     }
 
