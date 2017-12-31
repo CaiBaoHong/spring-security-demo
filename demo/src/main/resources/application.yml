@@ -21,7 +21,7 @@ custom:
         width: 120
         heigth: 45
         expire-in: 120
-        char-num: 6
+        length: 6
         hard: 1
         # 哪些url需要校验图片验证码
-        filter-urls: /user/test/2222
+        filter-urls: /user/*

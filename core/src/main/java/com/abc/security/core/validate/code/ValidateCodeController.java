@@ -1,6 +1,7 @@
 package com.abc.security.core.validate.code;
 
 
+import com.abc.security.core.properties.SecurityProperties;
 import com.github.bingoohuang.patchca.color.ColorFactory;
 import com.github.bingoohuang.patchca.custom.ConfigurableCaptchaService;
 import com.github.bingoohuang.patchca.filter.FilterFactory;
@@ -8,8 +9,10 @@ import com.github.bingoohuang.patchca.filter.predefined.*;
 import com.github.bingoohuang.patchca.font.RandomFontFactory;
 import com.github.bingoohuang.patchca.service.Captcha;
 import com.github.bingoohuang.patchca.word.RandomWordFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -26,10 +29,12 @@ public class ValidateCodeController {
 
     public static final String SESSION_KEY = "SESSION_KEY_IMAGE_CODE";
     private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
+    @Autowired
+    private SecurityProperties securityProperties;
 
     @GetMapping("/code/image")
     public void createCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ImageCode imageCode = createImageCode(request);
+        ImageCode imageCode = generate(new ServletWebRequest(request));
         sessionStrategy.setAttribute(new ServletWebRequest(request),SESSION_KEY,imageCode);
         ImageIO.write(imageCode.getImage(),"JPEG",response.getOutputStream());
     }
@@ -37,13 +42,19 @@ public class ValidateCodeController {
     /**
      * 创建一个图片验证码
      */
-    private ImageCode createImageCode(HttpServletRequest request) {
-        int width = 120;
-        int height = 45;
-        int length = 4;
-        int fontSize = 20;
-        int hard = 1;
-        int expireIn = 120;
+    private ImageCode generate(ServletWebRequest request) {
+        Integer width = ServletRequestUtils.getIntParameter(request.getRequest(), "width",
+                securityProperties.getCode().getImage().getWidth());
+        Integer height = ServletRequestUtils.getIntParameter(request.getRequest(), "height",
+                securityProperties.getCode().getImage().getHeight());
+        Integer length = ServletRequestUtils.getIntParameter(request.getRequest(), "charNum",
+                securityProperties.getCode().getImage().getCharNum());
+        Integer fontSize = ServletRequestUtils.getIntParameter(request.getRequest(), "fontSize",
+                securityProperties.getCode().getImage().getFontSize());
+        Integer expireIn = ServletRequestUtils.getIntParameter(request.getRequest(), "expireIn",
+                securityProperties.getCode().getImage().getExpireIn());
+        Integer hard = ServletRequestUtils.getIntParameter(request.getRequest(), "hard",
+                securityProperties.getCode().getImage().getHard());
         return generateImageCode(width,height,length,fontSize,hard,expireIn);
     }
 
