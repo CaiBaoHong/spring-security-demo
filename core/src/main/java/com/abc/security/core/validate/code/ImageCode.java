@@ -3,18 +3,11 @@ package com.abc.security.core.validate.code;
 import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
 
-/**
- * 图形验证码的模型
- */
-public class ImageCode {
+public class ImageCode{
 
     private BufferedImage image;
     private String code;
     private LocalDateTime expireTime;
-
-
-    public ImageCode() {
-    }
 
     public ImageCode(BufferedImage image, String code, int expireIn) {
         this.image = image;
@@ -52,11 +45,8 @@ public class ImageCode {
         this.expireTime = expireTime;
     }
 
-    /**
-     * 判断验证码是否过期
-     * @return
-     */
-    public boolean isExpired() {
+    public boolean isExpired(){
         return LocalDateTime.now().isAfter(expireTime);
     }
+
 }

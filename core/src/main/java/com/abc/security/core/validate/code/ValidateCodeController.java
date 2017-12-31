@@ -1,5 +1,13 @@
 package com.abc.security.core.validate.code;
 
+
+import com.github.bingoohuang.patchca.color.ColorFactory;
+import com.github.bingoohuang.patchca.custom.ConfigurableCaptchaService;
+import com.github.bingoohuang.patchca.filter.FilterFactory;
+import com.github.bingoohuang.patchca.filter.predefined.*;
+import com.github.bingoohuang.patchca.font.RandomFontFactory;
+import com.github.bingoohuang.patchca.service.Captcha;
+import com.github.bingoohuang.patchca.word.RandomWordFactory;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,11 +17,10 @@ import org.springframework.web.context.request.ServletWebRequest;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
 import java.io.IOException;
+import java.util.Random;
 
-/**
- * 生成图形验证码的控制器
- */
 @RestController
 public class ValidateCodeController {
 
@@ -22,27 +29,95 @@ public class ValidateCodeController {
 
     @GetMapping("/code/image")
     public void createCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ImageCode imageCode = new ImageCodeGenerator().generate(request);
-        //存入session
-        sessionStrategy.setAttribute(new ServletWebRequest(request), SESSION_KEY, imageCode);
-        setResponseImageCodeHeaders(response);
-        ImageIO.write(imageCode.getImage(), "PNG", response.getOutputStream());
+        ImageCode imageCode = createImageCode(request);
+        sessionStrategy.setAttribute(new ServletWebRequest(request),SESSION_KEY,imageCode);
+        ImageIO.write(imageCode.getImage(),"JPEG",response.getOutputStream());
     }
 
     /**
-     * 设置图片验证码相关的响应头
-     *
-     * @param response
+     * 创建一个图片验证码
      */
-    private void setResponseImageCodeHeaders(HttpServletResponse response) {
-        response.setHeader("Pragma", "no-cache");
-        response.setHeader("Cache-Control", "no-cache, no-store");
-        response.setContentType("image/png");
-        long time = System.currentTimeMillis();
-        response.setDateHeader("Expires", 0);
-        response.setDateHeader("Last-Modified", time);
-        response.setDateHeader("Date", time);
-        response.setDateHeader("Expires", time);
+    private ImageCode createImageCode(HttpServletRequest request) {
+        int width = 120;
+        int height = 45;
+        int length = 4;
+        int fontSize = 20;
+        int hard = 1;
+        int expireIn = 120;
+        return generateImageCode(width,height,length,fontSize,hard,expireIn);
     }
+
+    private ImageCode generateImageCode(int width,int height,int length,int fontSize, int hard,int expireIn) {
+
+        ConfigurableCaptchaService captchaService = new ConfigurableCaptchaService();
+        //word
+        RandomWordFactory wordFactory = new RandomWordFactory();
+        wordFactory.setMaxLength(length);// 字数
+        wordFactory.setMinLength(length);
+        //font
+        RandomFontFactory fontFactory = new RandomFontFactory();
+        fontFactory.setMinSize(fontSize);//字体大小
+        fontFactory.setMaxSize(fontSize);
+        //color
+        ColorFactory colorFactory = new MultiColorFactory();
+
+        captchaService.setWidth(width);//宽
+        captchaService.setHeight(height);//高
+        captchaService.setWordFactory(wordFactory);
+        captchaService.setFontFactory(fontFactory);
+        captchaService.setColorFactory(colorFactory);
+        captchaService.setFilterFactory(getFilterFactory(colorFactory, hard));//难度
+
+        Captcha captcha = captchaService.getCaptcha();
+        return new ImageCode(captcha.getImage(), captcha.getChallenge(), expireIn);
+
+    }
+
+    /**
+     * 自定义的颜色工厂，可产出多种颜色
+     */
+    class MultiColorFactory implements ColorFactory {
+        @Override
+        public Color getColor(int index) {
+            Random random = new Random();
+            //RGB红绿蓝三个色位
+            int[] c = new int[3];
+            int i = random.nextInt(c.length);
+            for (int j = 0; j < c.length; j++) {
+                if (j == i) {
+                    c[j] = random.nextInt(71);
+                } else {
+                    c[j] = random.nextInt(256);
+                }
+            }
+            return new Color(c[0], c[1], c[2]);
+        }
+
+    }
+
+    /**
+     * 根据指定的难度获取一个过滤器
+     *
+     * @param colorFactory 颜色工厂
+     * @param hard         难度，数字越大难道越高
+     * @return
+     */
+    private FilterFactory getFilterFactory(ColorFactory colorFactory, int hard) {
+        switch (hard) {
+            case 1:
+                return new WobbleRippleFilterFactory();//1
+            case 2:
+                return new DoubleRippleFilterFactory();//2
+            case 3:
+                return new CurvesRippleFilterFactory(colorFactory);//3
+            case 4:
+                return new DiffuseRippleFilterFactory();//4
+            case 5:
+                return new MarbleRippleFilterFactory();//5
+            default:
+                return new CurvesRippleFilterFactory(colorFactory);//3
+        }
+    }
+
 
 }

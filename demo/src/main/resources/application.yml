@@ -16,3 +16,12 @@ custom:
   security:
     browser:
       login-type: JSON
+    code:
+      image:
+        width: 120
+        heigth: 45
+        expire-in: 120
+        char-num: 6
+        hard: 1
+        # 哪些url需要校验图片验证码
+        filter-urls: /user/test/2222

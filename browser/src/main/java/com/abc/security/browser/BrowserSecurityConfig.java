@@ -9,12 +9,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter{
+public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private SecurityProperties securityProperties;
@@ -22,38 +23,56 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter{
     private BrowserAuthenticationSuccessHandler browserAuthenticationSuccessHandler;
     @Autowired
     private BrowserAuthenticationFailureHandler browserAuthenticationFailureHandler;
+    @Autowired
+    private UserDetailsService userDetailsService;
+//    @Autowired
+//    private ValidateCodeFilter validateCodeFilter;
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /*
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository(){
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+        return tokenRepository;
+    }
+    */
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http.httpBasic()
+
         ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
         validateCodeFilter.setAuthenticationFailureHandler(browserAuthenticationFailureHandler);
 
-        http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
-            .formLogin()
-            //在/authentication/require映射的控制器中做登录跳转处理，区分ajax请求引发的登录和请求页面引发的登录
-            .loginPage("/authentication/require")
-            .loginProcessingUrl("/authentication/form")
-            .successHandler(browserAuthenticationSuccessHandler)
-            .failureHandler(browserAuthenticationFailureHandler)
-
+        http    .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+                .formLogin()
+                //在/authentication/require映射的控制器中做登录跳转处理，区分ajax请求引发的登录和请求页面引发的登录
+                .loginPage("/authentication/require")
+                .loginProcessingUrl("/authentication/form")
+                .successHandler(browserAuthenticationSuccessHandler)
+                .failureHandler(browserAuthenticationFailureHandler)
+            /*
             .and()
-            .authorizeRequests()//开启访问控制
-            .antMatchers("/authentication/require",
-                    "/code/image",
-                    //使用者配置的登录页，也需要放行
-                    securityProperties.getBrowser().getLoginPage()).permitAll()
-            .anyRequest()//任何请求
-            .authenticated()//都需要鉴权（身份认证）
-
-            .and()
-            .csrf().disable()
-            ;
+                .rememberMe()
+                .tokenRepository(persistentTokenRepository())
+                .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
+                .userDetailsService(userDetailsService)//记住我功能用token从数据库拿到username之后，用这个UserDetailsService登录
+            */
+                .and()
+                .authorizeRequests()//开启访问控制
+                .antMatchers("/authentication/require",
+                        "/code/image",
+                        //使用者配置的登录页，也需要放行
+                        securityProperties.getBrowser().getLoginPage()).permitAll()
+                .anyRequest()//任何请求
+                .authenticated()//都需要鉴权（身份认证）
+                .and()
+                .csrf().disable()
+        ;
     }
 
 }
