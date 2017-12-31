@@ -27,4 +27,14 @@ public class ValidateCodeBeanConfig {
         return gen;
     }
 
+    /**
+     * 让使用者可以自己定义短信验证码发送的逻辑
+     * @return
+     */
+    @Bean
+    @ConditionalOnMissingBean(SmsCodeSender.class)
+    public SmsCodeSender smsCodeSender(){
+        return new DefaultSmsCodeSender();
+    }
+
 }

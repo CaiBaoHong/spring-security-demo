@@ -7,7 +7,7 @@ public class SmsCodeProperties {
 
     private int length = 6;//验证码字符数
     private int expireIn = 180;//验证码过期期限(秒)
-    private String filterUrls;//需要做图形验证码校验的url
+    private String filterUrls;//需要做验证码校验的url
 
     public int getLength() {
         return length;

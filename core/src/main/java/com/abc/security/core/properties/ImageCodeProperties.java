@@ -1,14 +1,18 @@
 package com.abc.security.core.properties;
 
-public class ImageCodeProperties{
+/**
+ * 图片验证码配置属性
+ */
+public class ImageCodeProperties extends SmsCodeProperties {
 
     private int width = 100;    //图片宽度
     private int height = 30;    //图片高度
-    private int length = 4;     //验证码字符数
-    private int expireIn = 180; //验证码过期期限(秒)
     private int fontSize = 20;  //字体大小
     private int hard = 1;       //验证码难度
-    private String filterUrls;//需要做图形验证码校验的url
+
+    public ImageCodeProperties() {
+        setLength(4);
+    }
 
     public int getWidth() {
         return width;
@@ -24,22 +28,6 @@ public class ImageCodeProperties{
 
     public void setHeight(int height) {
         this.height = height;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
-
-    public int getExpireIn() {
-        return expireIn;
-    }
-
-    public void setExpireIn(int expireIn) {
-        this.expireIn = expireIn;
     }
 
     public int getFontSize() {
@@ -58,11 +46,5 @@ public class ImageCodeProperties{
         this.hard = hard;
     }
 
-    public String getFilterUrls() {
-        return filterUrls;
-    }
 
-    public void setFilterUrls(String filterUrls) {
-        this.filterUrls = filterUrls;
-    }
 }
