@@ -23,6 +23,6 @@ public interface ValidateCodeProcessor {
      * 校验验证码
      * @param request
      */
-    void validate(ServletWebRequest request) throws Exception;
+    void validate(ServletWebRequest request);
 
 }

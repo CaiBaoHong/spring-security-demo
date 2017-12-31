@@ -25,3 +25,5 @@ custom:
         hard: 1
         # 哪些url需要校验图片验证码
         filter-urls: /user/*
+      sms:
+        filter-urls: /user/*
